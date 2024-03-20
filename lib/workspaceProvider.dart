@@ -1,6 +1,18 @@
-import 'package:bogo_bar/workspaces.dart';
+import 'package:bogo_bar/hyprlandProvider.dart';
+import 'package:bogo_bar/workspacesWidget.dart';
+/// if return is false, remove the callback.
+typedef WorkspaceUpdateCallback = bool Function(List<Workspace>);
 
 abstract class WorkspaceProvider{
+  static WorkspaceProvider? _instance;
+  final List<WorkspaceUpdateCallback> _callbacks = [];
+  final List<Workspace> _workspaces = [];
+  List<Workspace> get workspaces => _workspaces;
+    static WorkspaceProvider get instance {
+    _instance ??= HyprlandProvider();
+    return _instance!;
+  }
+
   List<bool> getIsActive();
   List<BorderType> getBorderType(){
     List<BorderType> borderType = [];
@@ -10,7 +22,7 @@ abstract class WorkspaceProvider{
       if( !activeWorkspaces[i]){
         borderType.add(BorderType.disabled);
       }else{
-        
+
         bool leftIsActive = (i-1 >= 0)? activeWorkspaces[i-1]: false;
         bool rightIsActive = (i+1 <activeWorkspaces.length)? activeWorkspaces[i+1]: false;
         if( leftIsActive & rightIsActive){
@@ -26,4 +38,32 @@ abstract class WorkspaceProvider{
     }
     return borderType;
   }
+
+  void addUpdateCallback(WorkspaceUpdateCallback callback){
+    _callbacks.add(callback);
+  }
+  void removeCallback(WorkspaceUpdateCallback callback){
+    _callbacks.remove(callback);
+  }
+
+  void _doCallbacks(){
+    List<WorkspaceUpdateCallback> toRemove = [];
+    for(WorkspaceUpdateCallback callback in _callbacks){
+      bool result = callback(workspaces);
+      if (!result){
+        toRemove.add(callback);
+      }
+    }
+    toRemove.forEach((element) {_callbacks.remove(element);});
+  }
+}
+
+
+
+class Workspace{
+  int id;
+  String name;
+  int activeWindows;
+  bool isCurrent;
+  Workspace({required this.id, required this.name, required this.activeWindows,this.isCurrent = false} );
 }

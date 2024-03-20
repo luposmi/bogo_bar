@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:wayland_layer_shell/types.dart';
 import 'package:wayland_layer_shell/wayland_layer_shell.dart';
 
-import 'workspaces.dart';
+import 'workspacesWidget.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

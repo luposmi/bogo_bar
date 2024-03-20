@@ -1,5 +1,5 @@
 import 'package:bogo_bar/hyprlandProvider.dart';
-import 'package:bogo_bar/workspace.dart';
+import 'package:bogo_bar/workspaceWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -28,7 +28,7 @@ class _WorkspacesState extends State<Workspaces> {
     List<BorderType> borderTypes = HyprlandProvider().getBorderType();
     int currentActive = HyprlandProvider().getCurrent();
     for (int i =0; i<borderTypes.length; i++){
-      workspaces.add(Workspace(isActive: true,symbol: Text((i+1).toString()),type: borderTypes[i],key: keys[i],wasClicked: (){}, isCurrent: i == currentActive-1,));
+      workspaces.add(WorkspaceWidget(isActive: true,symbol: Text((i+1).toString()),type: borderTypes[i],key: keys[i],wasClicked: (){}, isCurrent: i == currentActive-1,));
 
     }
     

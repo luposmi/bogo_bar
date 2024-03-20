@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:bogo_bar/workspaceProvider.dart';
 
 class HyprlandProvider extends WorkspaceProvider{
+  HyprlandProvider? _instance;
   @override
   List<bool> getIsActive() {
     List<Map<String, dynamic>> workspaces = getInformationWorkspaces()!;
@@ -22,6 +23,23 @@ class HyprlandProvider extends WorkspaceProvider{
     return (current["id"]);
 
 
+  }
+  HyprlandProvider(){
+    startReading();
+  }
+  startReading() async{
+    var hyprlandInstanceSignature = Platform.environment['HYPRLAND_INSTANCE_SIGNATURE'];
+    if (hyprlandInstanceSignature == null) {
+      throw Exception();
+    }
+
+    var socketPath = "/tmp/hypr/$hyprlandInstanceSignature/.socket2.sock";
+    final host = InternetAddress(socketPath, type: InternetAddressType.unix);
+    var socket = await Socket.connect(host,0);
+
+   socket.listen((List<int> data) {
+    print('Received: ${String.fromCharCodes(data)}');
+  });
   }
 
 
@@ -51,4 +69,5 @@ class HyprlandProvider extends WorkspaceProvider{
   }
   return result;
   }
+
 }
