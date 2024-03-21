@@ -1,7 +1,8 @@
 import 'package:bogo_bar/hyprlandProvider.dart';
 import 'package:bogo_bar/workspacesWidget.dart';
+import 'package:meta/meta.dart';
 /// if return is false, remove the callback.
-typedef WorkspaceUpdateCallback = bool Function(List<Workspace>);
+typedef WorkspaceUpdateCallback = bool Function(List<BorderType>);
 
 abstract class WorkspaceProvider{
   static WorkspaceProvider? _instance;
@@ -16,7 +17,7 @@ abstract class WorkspaceProvider{
   List<bool> getIsActive();
   List<BorderType> getBorderType(){
     List<BorderType> borderType = [];
-    List<bool> activeWorkspaces = getIsActive()!;
+    List<bool> activeWorkspaces = getIsActive();
 
     for(int i = 0; i< activeWorkspaces.length; i++){
       if( !activeWorkspaces[i]){
@@ -45,11 +46,12 @@ abstract class WorkspaceProvider{
   void removeCallback(WorkspaceUpdateCallback callback){
     _callbacks.remove(callback);
   }
-
-  void _doCallbacks(){
+  @protected
+  void doCallbacks(){
+    List<BorderType> activeWorkspaces = getBorderType();
     List<WorkspaceUpdateCallback> toRemove = [];
     for(WorkspaceUpdateCallback callback in _callbacks){
-      bool result = callback(workspaces);
+      bool result = callback(activeWorkspaces);
       if (!result){
         toRemove.add(callback);
       }

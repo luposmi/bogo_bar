@@ -1,4 +1,5 @@
 import 'package:bogo_bar/hyprlandProvider.dart';
+import 'package:bogo_bar/workspaceProvider.dart';
 import 'package:bogo_bar/workspaceWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -12,50 +13,54 @@ class Workspaces extends StatefulWidget {
 
 class _WorkspacesState extends State<Workspaces> {
   List<Key> keys = [];
+  late List<BorderType> borderType;
   Key key = UniqueKey();
   @override
   void initState() {
-    for(int i = 0; i<HyprlandProvider().getBorderType().length ; i++){
+    borderType = WorkspaceProvider.instance.getBorderType();
+    for (int i = 0; i < borderType.length; i++) {
       keys.add(UniqueKey());
     }
+    WorkspaceProvider.instance.addUpdateCallback((t) {
+      setState(() {
+        borderType = t;
+      });
+      return true;
+    });
     super.initState();
   }
+
   BorderType type = BorderType.alone;
-  //static const int widgetCount = 3;
-  
-  Widget getWorkspaces(){
+
+  Widget getWorkspaces() {
     List<Widget> workspaces = [];
     List<BorderType> borderTypes = HyprlandProvider().getBorderType();
     int currentActive = HyprlandProvider().getCurrent();
-    for (int i =0; i<borderTypes.length; i++){
-      workspaces.add(WorkspaceWidget(isActive: true,symbol: Text((i+1).toString()),type: borderTypes[i],key: keys[i],wasClicked: (){}, isCurrent: i == currentActive-1,));
-
+    for (int i = 0; i < borderTypes.length; i++) {
+      workspaces.add(WorkspaceWidget(
+        isActive: true,
+        symbol: Text(((i + 1) % 10).toString()),
+        type: borderTypes[i],
+        key: keys[i],
+        wasClicked: () {},
+        isCurrent: i == currentActive - 1,
+      ));
     }
-    
-    
-    return Row(children: workspaces,);
+
+    return Row(
+      children: workspaces,
+    );
   }
-  
+
   @override
   Widget build(BuildContext context) {
-
-        //HyprlandProvider().getInformationWorkspaces();
-    Future.delayed(Duration(milliseconds: 1000)).then((value ){setState((){});});
-
-    //return Workspace(isActive: true,symbol: Text(5.toString()),type: type,key: key);
-    return  Container(
-      decoration: BoxDecoration(color: Theme.of(context).colorScheme.background.withAlpha(100),borderRadius: BorderRadius.all(Radius.circular(999))),
-      padding: EdgeInsets.all(5),
-
-      child: getWorkspaces());
+    return Container(
+        decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.background.withAlpha(100),
+            borderRadius: BorderRadius.all(Radius.circular(999))),
+        padding: EdgeInsets.all(5),
+        child: getWorkspaces());
   }
 }
 
-
-enum BorderType{
-  disabled,
-  alone,
-  left,
-  right,
-  both
-}
+enum BorderType { disabled, alone, left, right, both }

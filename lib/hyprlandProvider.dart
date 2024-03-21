@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:bogo_bar/workspaceProvider.dart';
 
 class HyprlandProvider extends WorkspaceProvider{
-  HyprlandProvider? _instance;
   @override
   List<bool> getIsActive() {
     List<Map<String, dynamic>> workspaces = getInformationWorkspaces()!;
@@ -38,7 +37,8 @@ class HyprlandProvider extends WorkspaceProvider{
     var socket = await Socket.connect(host,0);
 
    socket.listen((List<int> data) {
-    print('Received: ${String.fromCharCodes(data)}');
+         doCallbacks();
+    //print('Received: ${String.fromCharCodes(data)}');
   });
   }
 
