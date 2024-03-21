@@ -10,6 +10,11 @@ abstract class WorkspaceProvider{
   final List<Workspace> _workspaces = [];
   List<Workspace> get workspaces => _workspaces;
     static WorkspaceProvider get instance {
+        if (_instance == null) {
+        var provider = HyprlandProvider();
+        provider.startReading();
+        _instance = provider;
+        }
     _instance ??= HyprlandProvider();
     return _instance!;
   }

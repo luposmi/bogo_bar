@@ -14,7 +14,6 @@ class WorkspaceWidget extends StatefulWidget {
 
 class _WorkspaceWidgetState extends State<WorkspaceWidget> {
   static const double size = 30;
-  static const double padding = 5;
   Color color = Colors.red;
   late BorderType type;
   
@@ -38,10 +37,9 @@ class _WorkspaceWidgetState extends State<WorkspaceWidget> {
     }
     if (widget.isCurrent){
       //return Hero(tag: "currentActiveWindow", child: AnimatedContainer( duration: Duration(milliseconds:400), decoration: BoxDecoration(color: Theme.of(context).colorScheme.primaryContainer,borderRadius: radius ), child: child));
-      return  AnimatedContainer( duration: Duration(milliseconds:400), decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary,borderRadius: radius ), child: child);
+      return  AnimatedContainer( duration: const Duration(milliseconds:200), decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary,borderRadius: radius ), child: child);
     }
-    //decoration: BoxDecoration(border: Border.all(width: 0),borderRadius: radius, color: Colors.green),
-    return AnimatedContainer( duration: Duration(milliseconds:400), decoration: BoxDecoration(color: type == BorderType.disabled ?null : color,borderRadius: radius ), child: child);
+    return AnimatedContainer( duration: const Duration(milliseconds:200), decoration: BoxDecoration(color: type == BorderType.disabled ?null : color,borderRadius: radius ), child: child);
  
   }
 
@@ -50,15 +48,13 @@ class _WorkspaceWidgetState extends State<WorkspaceWidget> {
         width: size,
         height: size,
         alignment: Alignment.center,
-        decoration: BoxDecoration(shape: BoxShape.circle),
+        decoration: const BoxDecoration(shape: BoxShape.circle),
 
         child: child);
   }
 
   @override
   Widget build(BuildContext context) {
-    //Future.delayed(Duration(seconds: 1)).then((value ){setState((){color= Colors.green;});});
-    //color = Colors.green;
     return borderFromBorderType(workspaceRounding(widget.symbol), widget.type, Theme.of(context).colorScheme.primaryContainer);
   }
 }
